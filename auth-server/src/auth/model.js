@@ -40,6 +40,7 @@ userSchema.methods.comparePassword = function(password) {
 
 // Generate a JWT from the user id and a secret
 userSchema.methods.generateToken = function() {
+  console.log('in the SAVEASVE -->');
   return jwt.sign( {id:this._id}, process.env.SECRET || 'changeit' );
 };
 

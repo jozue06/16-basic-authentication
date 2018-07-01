@@ -3,7 +3,7 @@
 import User from './model.js';
 
 export default (req, res, next) => {
-
+  console.log('I IS THE RUNSSSSSSSSSS -->');
   let authenticate = (auth) => {
     // Validate the user using the model's authenticate method
     User.authenticate(auth)
@@ -57,7 +57,7 @@ export default (req, res, next) => {
       let bufferString = base64Buffer.toString(); // john:mysecret
       let [username,password] = bufferString.split(':');  // variables username="john" and password="mysecret"
       auth = {username,password};  // {username:"john", password:"mysecret"}
-
+      // console.log({auth});
       // Start the authentication train
       authenticate(auth);
     }

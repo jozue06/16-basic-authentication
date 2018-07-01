@@ -17,6 +17,7 @@ authRouter.post('/signup', (req, res, next) => {
 });
 
 authRouter.get('/signin',auth, (req, res, next) => {
+  console.log('wassauupppp');
   res.cookie('Token', req.token);
   res.send('Hi');
 });
