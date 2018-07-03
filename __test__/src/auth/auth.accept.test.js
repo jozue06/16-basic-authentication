@@ -1,4 +1,5 @@
 'use strict';
+
 import {
   Mockgoose,
 } from 'mockgoose';
@@ -6,7 +7,6 @@ import mongoose from 'mongoose';
 import supertest from 'supertest';
 import {server} from '../../../src/app.js';
 const mockRequest = supertest(server);
-// const mockRequest = require('supertest')(server);
 const mockgoose = new Mockgoose(mongoose);
 
 afterAll( () => {
@@ -17,7 +17,7 @@ describe('Authentication Server', () => {
 
   beforeAll( (done) => {
     mockgoose.prepareStorage().then(()=>{
-      mongoose.connect('mongodb://localhost:27017/lab-18-test').then(()=>{
+      mongoose.connect('mongodb://localhost:27017/lab').then(()=>{
         done();
       });
     });
@@ -26,10 +26,6 @@ describe('Authentication Server', () => {
   afterEach((done)=>{
     mockgoose.helper.reset().then(done);
   });
-
-  // Note that these will actually be using the mocked models
-  // from the mock version of require-dir.  IOW .. no need to spin up
-  // a mongo server to run these tests. (we don't want to test mongo anyway!)
 
   it('gets a 401 on a bad login', () => {
     return mockRequest.get('/api/signin')
