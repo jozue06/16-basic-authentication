@@ -1,19 +1,30 @@
 'use strict';
+import {
+  Mockgoose,
+} from 'mockgoose';
+import mongoose from 'mongoose';
+import supertest from 'supertest';
+import {server} from '../../../src/app.js';
+const mockRequest = supertest(server);
+// const mockRequest = require('supertest')(server);
+const mockgoose = new Mockgoose(mongoose);
 
-const superagent = require('superagent');
-const mongoose = require('mongoose');
-const app = require('../../../src/app.js');
+afterAll( () => {
+  mongoose.connection.close();
+});
 
 describe('Authentication Server', () => {
 
-  const PORT = 8888;
-  beforeAll( () => {
-    mongoose.connect('mongodb://localhost:27017/baseball');
-    app.start(PORT);
+  beforeAll( (done) => {
+    mockgoose.prepareStorage().then(()=>{
+      mongoose.connect('mongodb://localhost:27017/lab-18-test').then(()=>{
+        done();
+      });
+    });
   });
-  afterAll( () => {
-    app.stop();
-    mongoose.connection.close();
+
+  afterEach((done)=>{
+    mockgoose.helper.reset().then(done);
   });
 
   // Note that these will actually be using the mocked models
@@ -21,7 +32,7 @@ describe('Authentication Server', () => {
   // a mongo server to run these tests. (we don't want to test mongo anyway!)
 
   it('gets a 401 on a bad login', () => {
-    return superagent.get('http://localhost:8888/signin')
+    return mockRequest.get('/api/signin')
       .then(response => {
       })
       .catch(response => {
@@ -30,7 +41,7 @@ describe('Authentication Server', () => {
   });
 
   it('gets a 401 on a bad login', () => {
-    return superagent.get('http://localhost:8888/signin')
+    return mockRequest.get('/api/signin')
       .auth('foo','bar')
       .then(response => {
       })
@@ -39,16 +50,6 @@ describe('Authentication Server', () => {
       });
   });
 
-  it('gets a 200 on a good login', () => {
-    return superagent.get('http://localhost:8888/signin')
-      .auth('john','foo')
-      .then(response => {
-        expect(response.statusCode).toEqual(200);
-      })
-      .catch(console.err);
-
-      
-  });
 
   it('signin gets a 200 on a good login', () => {
     let newUser = {
@@ -56,10 +57,10 @@ describe('Authentication Server', () => {
       password: 'test',
     };
 
-    return superagent.post('http://localhost:8888/signup')
+    return mockRequest.post('/api/signup')
       .send(newUser)
       .then(() => {
-        return superagent.get('http://localhost:8888/signin')
+        return mockRequest.get('/api/signin')
           .auth('js', 'test')
           .then(res => {
             expect(res.statusCode).toEqual(200);

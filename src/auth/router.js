@@ -20,7 +20,7 @@ authRouter.post('/api/signup', (req, res, next) => {
 });
 
 authRouter.get('/api/signin', auth, (req, res, next) => {
-  res.cookie('Token', req.token);
+  res.cookie('token!', req.token);
   res.send('Hi');
 });
 
