@@ -14,8 +14,8 @@ let app = express();
 
 app.use(cors());
 app.use(morgan('dev'));
-app.use(express.json());  // => req.body
-app.use(express.urlencoded({extended:true})); // req.body => from a form's key value pairs
+app.use(express.json()); 
+app.use(express.urlencoded({extended:true})); 
 
 app.use(authRouter);
 
