@@ -41,7 +41,7 @@ export default (req, res, next) => {
   try {
     let auth = {};
     let authHeader = req.headers.authorization;
-
+    console.log('USER afterasdfadasdff ----> ');
     if(!authHeader) {
       return getAuth();
     }
@@ -57,7 +57,7 @@ export default (req, res, next) => {
       let bufferString = base64Buffer.toString(); // john:mysecret
       let [username,password] = bufferString.split(':');  // variables username="john" and password="mysecret"
       auth = {username,password};  // {username:"john", password:"mysecret"}
-      // console.log({auth});
+      console.log({auth});
       // Start the authentication train
       authenticate(auth);
     }
