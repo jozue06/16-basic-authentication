@@ -8,6 +8,7 @@ import authRouter from './auth/router.js';
 
 import errorHandler from './middleware/error.js';
 import notFound from './middleware/404.js';
+import badReq from './middleware/errorBadReq.js';
 
 let app = express();
 
@@ -20,25 +21,26 @@ app.use(authRouter);
 
 app.use(notFound);
 app.use(errorHandler);
+app.use(badReq);
 
 let server = false;
+
 
 module.exports = {
   start: (port) => {
     if(!server) {
-      server = app.listen(port, (err) => {
-        if(err) { throw err; }
-        console.log('Server running on', port);
+      app.listen(port, (err) => {
+        if(err) {throw err;}
+        console.log('LISTENING ON PORT: ', port);
       });
-    }
-    else {
+    } else {
       console.log('Server is already running');
     }
   },
-
   stop: () => {
-    server.close( () => {
-      console.log('Server is now off');
+    app.close( () => {
+      console.log('Server has stopped');
     });
   },
+  server: app,
 };

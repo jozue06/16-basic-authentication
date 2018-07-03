@@ -46,6 +46,24 @@ describe('Authentication Server', () => {
         expect(response.statusCode).toEqual(200);
       })
       .catch(console.err);
+
+      
   });
 
+  it('signin gets a 200 on a good login', () => {
+    let newUser = {
+      username: 'js',
+      password: 'test',
+    };
+
+    return superagent.post('http://localhost:8888/signup')
+      .send(newUser)
+      .then(() => {
+        return superagent.get('http://localhost:8888/signin')
+          .auth('js', 'test')
+          .then(res => {
+            expect(res.statusCode).toEqual(200);
+          });
+      });
+  });
 });
